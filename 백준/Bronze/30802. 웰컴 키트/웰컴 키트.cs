@@ -28,8 +28,7 @@ class BOJ
 
         for (int i = 0; i < shirtArr.Length; i++)
         {
-            resultT += (shirtArr[i] / t);
-            resultT += ((shirtArr[i] % t) > 0) ? 1 : 0;
+            resultT += (shirtArr[i] + t - 1) / t;
         }
 
 
