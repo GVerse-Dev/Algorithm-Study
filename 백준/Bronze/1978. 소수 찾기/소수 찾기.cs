@@ -21,7 +21,7 @@ class BOJ
                 continue;
 
             bool check = true;
-            for (int j = 2; j <= numberArr[i] / 2; ++j)
+            for (int j = 2; j * j <= numberArr[i]; ++j)
             {
                 if (numberArr[i] % j == 0)
                 {
