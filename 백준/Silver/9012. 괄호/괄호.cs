@@ -14,37 +14,27 @@ class BOJ
         for (int i = 0; i < inputCnt; i++)
         {
             string inputStr = Console.ReadLine();
-            Stack<char> chrs = new Stack<char>();
 
-            bool check = true;
+            int check = 0;
             for (int j = 0;  j < inputStr.Length; ++j)
             {
                 if (inputStr[j] == '(')
-                    chrs.Push(inputStr[j]);
+                    check++;
                 else
                 {
-                    if (chrs.Count < 1)
-                    {
-                        check = false;
-                        break;
-                    }
+                    
+                    check--;
 
-                    chrs.Pop();
+                    if (check < 0)
+                        break;
                 }
             }
 
-            if (chrs.Count > 0)
-            {
-                check = false;
-            }
-
-            if(check)
+            if (check == 0)
                 Console.WriteLine("YES");
             else
                 Console.WriteLine("NO");
         }
-
-        
 
     }
 
