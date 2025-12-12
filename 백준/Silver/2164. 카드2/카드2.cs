@@ -10,31 +10,31 @@ class BOJ
     static void Main()
     {
         int inputCnt = int.Parse(Console.ReadLine());
-        List<int> list = new List<int>();
+        Queue<int> ints = new Queue<int>();
 
         for (int i = 1; i <= inputCnt; i++)
         {
-            list.Add(i);
+            ints.Enqueue(i);
         }
 
-        int index = 0;
+
         bool move = false;
-        while (index < list.Count - 1)
+        while (ints.Count > 1)
         {
             if (move == false)
             {
+                ints.Dequeue();
                 move = true;
             }
             else
             {
-                list.Add(list[index]);
+                int temp = ints.Dequeue();
+                ints.Enqueue(temp);
                 move= false;
             }
-
-            index++;
         }
 
-        Console.WriteLine(list[index]);
+        Console.WriteLine(ints.Dequeue());
 
     }
 
