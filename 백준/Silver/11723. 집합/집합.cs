@@ -9,7 +9,7 @@ class BOJ
     static void Main()
     {
         int inputCnt = int.Parse(Console.ReadLine());
-        bool[] arr = new bool[21];
+        int set = 0;
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < inputCnt; i++)
@@ -21,27 +21,22 @@ class BOJ
             switch (input[0])
             {
                 case "add":
-                    arr[num] = true;
+                    set |= (1 << num);
                     break;
                 case "remove":
-                    arr[num] = false;
+                    set &= ~(1 << num);
                     break;
                 case "check":
-                    sb.Append((arr[num] ? 1 : 0)  + "\n");
+                    sb.Append((((set & (1 << num)) != 0) ? 1 : 0 ) + "\n");
                     break;
                 case "toggle":
-                    if (arr[num])
-                        arr[num] = false;
-                    else
-                        arr[num] = true;
+                    set ^= (1 << num);
                     break;
                 case "all":
-                    for (int k = 0; k < arr.Length; k++)
-                        arr[k] = true;
+                    set = ~0;
                     break;
                 case "empty":
-                    for (int k = 0; k < arr.Length; k++)
-                        arr[k] = false;
+                    set = 0;
                     break;
                 default:
                     break;
