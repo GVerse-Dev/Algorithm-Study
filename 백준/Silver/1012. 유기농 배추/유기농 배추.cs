@@ -34,6 +34,51 @@ class BOJ
         return 0;
     }
 
+    static int BFS(int[,] board, bool[,] visited, int x, int y)
+    {
+        int[] dirX = { -1, 0, 1, 0 };
+        int[] dirY = { 0, -1, 0, 1 };
+
+        Queue<(int curX, int curY)> queue = new Queue<(int curX, int curY)>();
+        
+        visited[y, x] = true;
+
+        if (board[y, x] == 1)
+        {
+            queue.Enqueue((x, y));
+
+            while (queue.Count > 0)
+            {
+                (int curX, int curY) pos = queue.Dequeue();
+
+                if (board[pos.curY, pos.curX] == 1)
+                {
+                    for (int i = 0; i < dirX.Length; i++)
+                    {
+                        int moveX = pos.curX + dirX[i];
+                        int moveY = pos.curY + dirY[i];
+
+                        if (moveX < 0 || board.GetLength(1) <= moveX)
+                            continue;
+                        if (moveY < 0 || board.GetLength(0) <= moveY)
+                            continue;
+
+                        
+                        if (board[moveY, moveX] == 1 && visited[moveY, moveX] == false)
+                            queue.Enqueue((moveX, moveY));
+
+
+                        visited[moveY, moveX] = true;
+                    }
+                }
+            }
+
+            return 1;
+        }
+        else
+            return 0;
+    }
+
     static void Main()
     {
         StringBuilder sb = new StringBuilder();
@@ -61,15 +106,16 @@ class BOJ
                 board[y, x] = 1;
             }
 
-
             for (int targetX = 0; targetX < m; ++targetX)
             {
                 for (int targetY = 0; targetY < n; ++targetY)
                 {
-                    result += DFS(board, visited, targetX, targetY);
+                    if (visited[targetY, targetX] == false)
+                    {
+                        result += BFS(board, visited, targetX, targetY);
+                    }
                 }
             }
-
 
 
             sb.Append(result.ToString() + "\n");
