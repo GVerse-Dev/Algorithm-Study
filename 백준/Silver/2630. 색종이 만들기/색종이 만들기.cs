@@ -8,18 +8,41 @@ using System.Collections.Generic;
 
 class BOJ
 {
+    static int white = 0;
+    static int blue = 0;
 
+    static void Divide(int[,] board, int x, int y, int size)
+    {
+        int result = Check(board, x, y, size);
+
+        if (result >= 0)
+        {
+            if (result == 1)
+                blue++;
+            else
+                white++;
+
+            return;
+        }
+
+        int newSize = size / 2;
+
+        Divide(board, x, y, newSize);
+        Divide(board, x + newSize, y, newSize);
+        Divide(board, x, y + newSize, newSize);
+        Divide(board, x + newSize, y + newSize, newSize);
+    }
 
     // 쪼개진 보드를 체크
-    static int Check(List<List<int>> list)
+    static int Check(int[,] board, int x, int y, int size)
     {
-        int target = list[0][0];
+        int target = board[y,x];
 
-        for (int y =0; y<list.Count; ++y)
+        for (int i = y; i < y + size; ++i)
         {
-            for (int x = 0; x < list.Count; ++x)
+            for (int j = x; j < x + size; ++j)
             {
-                if (list[y][x] != target)
+                if (board[i,j] != target)
                 {
                     return -1;
                 }
@@ -35,71 +58,20 @@ class BOJ
 
         int inputN = int.Parse(Console.ReadLine());
 
-        List<List<int>> board = new List<List<int>>();
+        int[,] board = new int[inputN,inputN];
 
-        Queue<List<List<int>>> queue = new Queue<List<List<int>>>();
-
-        int white = 0;
-        int blue = 0;
         for (int y = 0; y < inputN; y++)
         {
             string[] input = Console.ReadLine().Split(' ');
-            board.Add(new List<int>());
 
             for (int x = 0; x < inputN; x++)
             {
-                board[y].Add(int.Parse(input[x]));
-
+                board[y,x] = int.Parse(input[x]);
             }
         }
 
-        int n = inputN;
-        queue.Enqueue(board);
 
-        while (queue.Count > 0)
-        {
-            var papers = queue.Dequeue();
-
-            n = papers.Count();
-
-            //N까지 체크
-            int value = Check(papers);
-
-            //false 면 반으로 쪼개서 다시 인큐
-            if (value == -1)
-            {
-                for (int yy = 0; yy < n; yy += (n / 2))
-                {
-                    for (int xx = 0; xx < n; xx += (n / 2))
-                    {
-                        List<List<int>> temp = new List<List<int>>();
-                        for (int y = 0; y < (n / 2); y++)
-                        {
-                            temp.Add(new List<int>());
-                            for (int x = 0; x < (n / 2); x++)
-                            {
-                                temp[y].Add(papers[y + yy][x + xx]); 
-                            }
-                        }
-
-                        queue.Enqueue(temp);
-                    }
-                }
-
-            }
-            //true 면 그 값의 종이 + 1
-            else
-            {
-                if (value == 1)
-                {
-                    blue++;
-                }
-                else if((value == 0))
-                {
-                    white++;
-                }
-            }
-        }
+        Divide(board, 0, 0, inputN);
 
 
         sb.AppendLine(white.ToString());
