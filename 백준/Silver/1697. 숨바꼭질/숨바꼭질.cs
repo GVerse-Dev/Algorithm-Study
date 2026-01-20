@@ -20,10 +20,11 @@ class BOJ
         int k = int.Parse(inputNK[1]);
 
         Queue<(int, int)> queue = new Queue<(int, int)>();
-        HashSet<int> visited = new HashSet<int>();
+        bool[] visited = new bool[100001];
 
         if (n != k)
         {
+            visited[n] = true;
             queue.Enqueue((n, 0));
         }
         else
@@ -47,31 +48,37 @@ class BOJ
             {
                 sb.AppendLine(nextLevel.ToString()); break;
             }
-            else if (nextValue >= 0 && !visited.Contains(nextValue))
+            else if (nextValue >= 0 && !visited[nextValue])
             {
-                visited.Add(position);
+                visited[nextValue] = true;
                 queue.Enqueue((nextValue, nextLevel));
             }
 
             nextValue = position + 1;
             if (nextValue == k)
             {
-                sb.AppendLine(nextLevel.ToString()); break;
+                sb.AppendLine(nextLevel.ToString());
+                break;
             }
-            else if(nextValue <= 100000 && !visited.Contains(nextValue))
+            else if (nextValue <= 100000 && !visited[nextValue])
+            {
+                visited[nextValue] = true;
                 queue.Enqueue((nextValue, nextLevel));
+            }
+            
 
 
             nextValue = position * 2;
             if (nextValue == k)
             {
-                sb.AppendLine(nextLevel.ToString()); break;
+                sb.AppendLine(nextLevel.ToString());
+                break;
             }
-            else if(nextValue < (k * 2) && !visited.Contains(nextValue))
+            else if (nextValue <= 100000 && !visited[nextValue])
+            {
+                visited[nextValue] = true;
                 queue.Enqueue((nextValue, nextLevel));
-
-
-            visited.Add(position);
+            }
         }
 
     
