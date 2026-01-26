@@ -15,13 +15,13 @@ class BOJ
 
     static StringBuilder sb = new StringBuilder();
 
-    static void DFS(int n, int m, int[] ints, int idx, HashSet<int> temp)
+    static void DFS(int n, int m, int[] ints, bool[] visited, int[] result, int cnt)
     {
-        if (temp.Count >= m)
+        if (cnt >= m)
         {
-            foreach (int i in temp)
+            for (int i = 0; i < result.Length; ++i)
             {
-                sb.Append(i +  " ");
+                sb.Append(result[i] +  " ");
             }
             sb.AppendLine();
             return;
@@ -29,17 +29,18 @@ class BOJ
 
         for (int i = 0; i < n; i++)
         {
-            if (temp.Contains(ints[i]))
+            if (visited[i])
                 continue;
 
-            HashSet<int> next = new HashSet<int>();
-            foreach (int j in temp)
-            {
-                next.Add(j);
-            }
-            next.Add(ints[i]);
+            visited[i] = true;
+            result[cnt] = ints[i];
+            cnt++;
+
             //다음 인덱스로 이동
-            DFS(n, m, ints, idx, next);
+            DFS(n, m, ints, visited, result, cnt);
+
+            visited[i] = false;
+            cnt--;
         }
     }
 
@@ -55,6 +56,8 @@ class BOJ
         string[] input = Console.ReadLine().Split(' ');
 
         int[] ints = new int[n];
+        bool[] visited = new bool[n];
+        int[] result = new int[m];
 
         for (int i = 0; i < n; i++)
         {
@@ -63,7 +66,7 @@ class BOJ
 
         Array.Sort(ints);
 
-        DFS(n, m, ints, 0, new HashSet<int>());
+        DFS(n, m, ints, visited, result, 0);
 
         Console.WriteLine(sb.ToString());
     }
