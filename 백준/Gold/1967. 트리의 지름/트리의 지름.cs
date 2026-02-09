@@ -4,6 +4,7 @@ class BOJ
 {
     static StringBuilder sb = new StringBuilder();
 
+    static int idx = 0;
     static int result = 0;
     static void DFS(List<(int linkNode, int edgeWeight)>[] edges, bool[] visited, int node, int dist)
     {
@@ -15,6 +16,7 @@ class BOJ
 
         if (dist > result)
         {
+            idx = node;
             result = dist;
         }
 
@@ -31,12 +33,9 @@ class BOJ
 
     static void Main()
     {
-
         int n = int.Parse(Console.ReadLine());
 
-
         List<(int linkNode, int edgeWeight)>[] edges = new List<(int linkNode, int edgeWeight)>[n + 1];
-
        
         for (int i = 0; i < n - 1; i++)
         {
@@ -56,13 +55,12 @@ class BOJ
             edges[childNode].Add((parentNode, edgeWeight));
         }
 
-        for (int i = 1; i <= n; i++)
-        {
-            bool[] visited = new bool[n + 1];
-            DFS(edges, visited, i, 0);
-        }
-        
-       
+        bool[] visited = new bool[n + 1];
+        DFS(edges, visited, 1, 0);
+        visited = new bool[n + 1];
+        DFS(edges, visited, idx, 0);
+
+
 
         Console.WriteLine(result.ToString());
     }
