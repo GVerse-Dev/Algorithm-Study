@@ -5,56 +5,44 @@ class BOJ
 {
     static StringBuilder sb = new StringBuilder();
 
-    static (int node, ulong dist) Dijkstra(List<(int node, ulong cost)>[] edgeList, int start)
+    static (int node, ulong cost) BFS(List<(int node, ulong cost)>[] edgeList, int start)
     {
-        ulong[] board = new ulong[edgeList.Length];
+        ulong[] board = new ulong[edgeList.Length + 1];
+        bool[] visited = new bool[edgeList.Length + 1];
+        Queue<(int node, ulong cost)> queue = new Queue<(int node, ulong cost)>();
+        queue.Enqueue((start, 0));
+        visited[start] = true;
 
-        for (int i = 0; i < board.Length; ++i)
+        while (queue.Count > 0)
         {
-            board[i] = ulong.MaxValue;
-        }
-        board[start] = 0;
+            (int node, ulong cost) current = queue.Dequeue();
 
-        PriorityQueue<(int node, ulong cost), ulong> priorityQueue = new PriorityQueue<(int node, ulong cost), ulong>();
-        priorityQueue.Enqueue((start, 0), 0);
-
-        while (priorityQueue.Count > 0)
-        {
-            var current = priorityQueue.Dequeue();
-            int currentNode = current.node;
-            ulong currentCost = current.cost;
-
-            //현재 방문한 노드의 비용이 이미 더 적다면
-            //여기서부터 다음노드까지의 비용은 최소가 아니기 때문에 볼 필요가 없음
-            if (board[currentNode] < currentCost)
+            for (int i = 0; i < edgeList[current.node].Count; i++)
             {
-                continue;
-            }
+                (int node, ulong cost) next = edgeList[current.node][i];
 
-            foreach (var (next, nextCost) in edgeList[currentNode])
-            {
-                ulong newCost = currentCost + nextCost;
+                if (visited[next.node])
+                    continue;
 
-                if (board[next] > newCost)
-                {
-                    board[next] = newCost;
-                    priorityQueue.Enqueue((next, newCost), newCost);
-                }
+                board[next.node] = current.cost + next.cost;
 
+                visited[next.node] = true;
+                queue.Enqueue((next.node, board[next.node]));
             }
         }
 
-        (int node, ulong dist) longestNode = (start,0);
-        for(int i = 1; i< board.Length; ++i)
+        (int node, ulong cost) result = (start, 0);
+        for (int i = 1; i < board.Length; i++)
         {
-            if (longestNode.dist < board[i])
+            if (result.cost < board[i])
             {
-                longestNode.node = i;
-                longestNode.dist = board[i];
+                result.cost = board[i];
+                result.node = i;
             }
         }
 
-        return longestNode; 
+        return result;
+
     }
 
     static void Main()
@@ -85,8 +73,8 @@ class BOJ
             }
         }
 
-        (int node, ulong dist) longestNode = Dijkstra(edgeList, 1);
-        (int node, ulong dist) result = Dijkstra(edgeList, longestNode.node);
+        (int node, ulong dist) longestNode = BFS(edgeList, 1);
+        (int node, ulong dist) result = BFS(edgeList, longestNode.node);
 
 
         Console.WriteLine(result.dist.ToString());
