@@ -37,45 +37,35 @@ class BOJ
 
     static bool DFS(int x, int y)
     {
+        if (x >= 9 || y >= 9)
+            return true;
+
+        int nextX = (x + 1) % 9;
+        int nextY = (nextX == 0) ? y + 1 : y;
+
+        //이미 값이 들어가있다면 패스
+        if (sudoku[y, x] != 0)
+            return DFS(nextX, nextY);
+
+
         for (int num = 1; num <= 9; num++)
         {
-            int nextX = (x + 1) % 9;
-            int nextY = (nextX == 0) ? y + 1 : y;
-
-            //이미 값이 들어가있다면 패스
-            if (sudoku[y,x] != 0)
-            {
-                //마지막이라면
-                if (x == 8 && y == 8)
-                    return true;
-
-                return DFS(nextX, nextY);
-            }
-
             //행, 열, 스퀘어 모두 num 이 없다면
             if (!c1[y, num] && !c2[x, num] && !c3[square(x, y), num])
             {
-                //마지막칸에 빈 숫자라면 확정된거니 넣고 반환
-                if (x == 8 && y == 8)
-                {
-                    c1[y, num] = true;
-                    c2[x, num] = true;
-                    c3[square(x, y), num] = true;
-                    sudoku[y, x] = num;
-                    return true;
-                }
-
-                //문제가 없어보인다면 값을 넣고 다음칸
+                //문제가 없어보인다면 값을 넣고 
                 c1[y, num] = true;
                 c2[x, num] = true;
                 c3[square(x, y), num] = true;
                 sudoku[y, x] = num;
 
-                //다음칸에도 문제가 없었다면
-                if (DFS(nextX, nextY))
-                {
+                //마지막이라면
+                if (x == 8 && y == 8)
                     return true;
-                }
+
+                //다음칸으로 이동해보고 문제가 없었다면
+                if (DFS(nextX, nextY))
+                    return true;
                 //문제가 있었다면 초기화
                 else
                 {
