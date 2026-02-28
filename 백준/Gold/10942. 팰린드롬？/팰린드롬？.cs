@@ -32,14 +32,32 @@ class BOJ
             ints[i] = int.Parse(input[i - 1]);
         }
 
-        int[,] resultP = new int[ints.Length + 1, ints.Length + 1];
-        for (int i = 1; i <= n; ++i)
+        bool[,] resultP = new bool[ints.Length + 1, ints.Length + 1];
+
+        //길이가 1
+        for (int i = 1; i <= n; i++)
         {
-            for (int j = i; j <= n; ++j)
+            resultP[i,i] = true;
+        }
+
+        //길이가 2
+        for (int i = 1; i <= n - 1; i++)
+        {
+            resultP[i, i + 1] = ints[i] == ints[i + 1] ? true : false;
+        }
+
+        //길이가 3 이상
+        for (int len = 3; len <= n; len++)
+        {
+            for (int start = 1; start + len - 1 <= n; start++)
             {
-                resultP[i, j] = Check(ints, i, j);
+                int end = start + len - 1;
+
+                resultP[start, end] = ((ints[start] == ints[end]) && resultP[start + 1, end - 1]); 
             }
         }
+
+
 
         int c = int.Parse(Console.ReadLine());
 
@@ -49,7 +67,7 @@ class BOJ
             int a = int.Parse(inputC[0]);
             int b = int.Parse(inputC[1]);
 
-            sb.AppendLine(resultP[a,b].ToString());
+            sb.AppendLine(resultP[a,b] ? "1" : "0");
         }
 
 
