@@ -5,12 +5,12 @@ public class Solution {
  {
      long answer = -1;
 
-     long timeMax = (long)4e14;
+     long timeMax = 1000000000000000;
      long timeMin = 0;
 
      while (timeMin < timeMax) 
      {
-         long timeMid = (timeMax + timeMin) / 2;
+         long timeMid = timeMin + ((timeMax - timeMin) / 2);
 
          long totalLoad = 0;
          long totalGoldLoad = 0;
